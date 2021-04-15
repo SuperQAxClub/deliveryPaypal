@@ -300,3 +300,48 @@ function blockInput(form, action) {
         $('#'+form+' .collab-checkbox-container').removeClass('disabled');
     }
 }
+//FORM SUBMIT
+//Signup form
+$(document).on('submit','#signupForm',function(e){
+    e.preventDefault();
+    fullName = getInputVal('signupForm','fullName');
+    userName = getInputVal('signupForm','userName');
+    password = getInputVal('signupForm','password');
+    confirmPassword = getInputVal('signupForm','confirmPassword');
+
+    formData = new FormData();
+    formData.append('fullName', fullName);
+    formData.append('userName', userName);
+    formData.append('password', password);
+    formData.append('confirmPassword', confirmPassword);
+
+    blockInput('signupForm','active');
+    removeInputError('signupForm');
+
+    setTimeout(function(){
+        fetch("/php/data/signup.php",{
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            if(res.ok) {
+                return res.json();
+            } else {
+                return Promise.reject(res.status);
+            }
+        })
+        .then(data => {
+            if(!data.success) {
+                checkInputError('signupForm',data);
+                blockInput('signupForm','disable');
+            } else {
+                showNotiSuccess("Đăng ký thành công","Tài khoản của bạn đã được tạo, đang chuyển hướng đến trang đăng nhập");
+                setTimeout(function(){
+                    window.open("http://placeholder.collabvn.ga/login","_self")
+                },2000);
+            }
+        }).catch(function(e) {
+            checkErrorCode(e);
+            blockInput('signupForm','disable');
+        });
+    },1000)
+})
