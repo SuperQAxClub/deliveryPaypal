@@ -1514,3 +1514,46 @@ $wallpaper-list: 'gray14' 'jpg',
     margin: 0 10px;
   }
 }
+//Delivery
+.d-login-bg {
+  @include center-bg();
+  background-image: url('/image/loginbg.jpg');
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.d-login-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  .login-box {
+    background-color: #fff;
+    padding: 15px;
+    width: 400px;
+    @include shadow();
+    .login-title {
+      font-size: 25pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      @include gradient-text();
+      background-image: linear-gradient(to right, var(--darkblue), var(--red));
+      margin-bottom: 5px;
+      text-align: center;
+    }
+    .collab-checkbox-container {
+      margin-top: 30px;
+    }
+    .collab-button {
+      margin-top: 20px;
+    }
+    .login-signup {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+  }
+}
