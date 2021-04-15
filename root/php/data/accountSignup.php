@@ -45,7 +45,7 @@
         $hashedPassword = password_hash($password,PASSWORD_DEFAULT);
         $userID = createUserID();
         
-        $addUser = runDbReturn("INSERT INTO user(userID, fullName, userName, password) VALUES(?, ?, ?, ?, ?)","sssss",array($userID, $fullname, $username, $hashedPassword),'affected');
+        $addUser = runDbReturn("INSERT INTO user(userID, fullName, userName, password, type) VALUES(?, ?, ?, ?, ?)","sssss",array($userID, $fullname, $username, $hashedPassword, 'user'),'affected');
         if($addUser < 1) {
             $error['reason'] = "dberror";
             $data['success'] = false;
