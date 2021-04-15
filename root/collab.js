@@ -319,7 +319,7 @@ $(document).on('submit','#signupForm',function(e){
     removeInputError('signupForm');
 
     setTimeout(function(){
-        fetch("/php/data/signup.php",{
+        fetch("/php/data/accountSignup.php",{
             method: 'POST',
             body: formData
         }).then(res => {
@@ -334,7 +334,7 @@ $(document).on('submit','#signupForm',function(e){
                 checkInputError('signupForm',data);
                 blockInput('signupForm','disable');
             } else {
-                showNotiSuccess("Đăng ký thành công","Tài khoản của bạn đã được tạo, đang chuyển hướng đến trang đăng nhập");
+                showNotiLoading("Đăng ký thành công","Tài khoản của bạn đã được tạo, đang chuyển hướng đến trang đăng nhập");
                 setTimeout(function(){
                     window.open("http://placeholder.collabvn.ga/login","_self")
                 },2000);
