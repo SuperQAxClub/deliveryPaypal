@@ -21,7 +21,7 @@
                         <ion-icon name="key"></ion-icon>
                     </div>
                     <div class="input-main">
-                        <input type="text" name="password" placeholder="Nhập mật khẩu của bạn">
+                        <input type="password" name="password" placeholder="Nhập mật khẩu của bạn">
                         <label>Mật khẩu</label>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                     <div class="checkbox-title">Ghi nhớ thiết bị</div>
                 </label>
             </div>
-            <button class="collab-button">Đăng nhập</button>
+            <button type="submit" class="collab-button full-width">Đăng nhập</button>
 
             <div class="login-signup"><a href="/signup">Đăng ký tài khoản</a></div>
         </form>
