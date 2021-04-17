@@ -13,9 +13,46 @@ $(window).on('load',function() {
     var pathArr = getPath.split('/');
     var pathType = pathArr[1];
     if(pathType == '') {
-        
+        loadOrder();
+    } else if (pathType == "delivery") {
+        loadDeliveryOrder();
     }
 })
+
+//Load orders
+function loadOrder() {
+    fetch("/php/data/loadOrder.php",{
+        method: 'GET'
+    })
+    .then(res => {
+        if(res.ok) {
+            return res.text();
+        } else {
+            return Promise.reject(res.status);
+        }
+    }).then(function(html) {
+        $('#loadOrder').html(html);
+    }).catch(function(e) {
+        checkErrorCode(e);
+    });
+}
+//Load delivery orders
+function loadDeliveryOrder() {
+    fetch("/php/data/loadDeliveryOrder.php",{
+        method: 'GET'
+    })
+    .then(res => {
+        if(res.ok) {
+            return res.text();
+        } else {
+            return Promise.reject(res.status);
+        }
+    }).then(function(html) {
+        $('#loadDeliveryOrder').html(html);
+    }).catch(function(e) {
+        checkErrorCode(e);
+    });
+}
 //Function
 //--Notification
 function callNoti(type, delay, title, content) {
@@ -437,6 +474,119 @@ $(document).on('submit','#loginDeliveryForm',function(e){
         }).catch(function(e) {
             checkErrorCode(e);
             blockInput('loginDeliveryForm','disable');
+        });
+    },1000)
+})
+
+//Paypal
+function loadPaypal() {
+    paypal.Button.render({
+        // Configure environment
+        env: 'sandbox',
+        client: {
+          sandbox: 'AU7xsYoawaiRTec1GojlgyLGJVmI1W_-z17xfAZp-6-ln7lKL6YO749SRjmuCqZ0p9mcjJ53tq7XqK0O'
+        },
+        // Customize button (optional)
+        locale: 'en_US',
+        style: {
+          size: 'small',
+          color: 'gold',
+          shape: 'pill',
+        },
+    
+        // Enable Pay Now checkout flow (optional)
+        commit: true,
+    
+        // Set up a payment
+        payment: function(data, actions) {
+          return actions.payment.create({
+            transactions: [{
+              amount: {
+                total: '10',
+                currency: 'USD'
+              }
+            }]
+          });
+        },
+        // Execute the payment
+        onAuthorize: function(data, actions) {
+          return actions.payment.execute().then(function() {
+            addOrder();
+          });
+        }
+      }, '#paypal-button');
+}
+//Add order
+function addOrder() {
+    sendAddress = getInputVal('addOrder','sendAddress');
+    receiveAddress = getInputVal('addOrder','receiveAddress');
+    receiveName = getInputVal('addOrder','receiveName');
+    sendProduct = getInputVal('addOrder','sendProduct');
+    sendNumber = getInputVal('addOrder','sendNumber');
+
+    formData = new FormData();
+    formData.append('sendAddress', sendAddress);
+    formData.append('receiveAddress', receiveAddress);
+    formData.append('receiveName', receiveName);
+    formData.append('sendProduct', sendProduct);
+    formData.append('sendNumber', sendNumber);
+
+    blockInput('addOrder','active');
+    removeInputError('addOrder');
+
+    setTimeout(function(){
+        fetch("/php/data/addOrder.php",{
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            if(res.ok) {
+                return res.json();
+            } else {
+                return Promise.reject(res.status);
+            }
+        })
+        .then(data => {
+            if(!data.success) {
+                checkInputError('addOrder',data);
+                blockInput('addOrder','disable');
+            } else {
+                showNotiSuccess("Yêu cầu thành công","Yêu cầu giao hàng đã được tiếp nhận, nhân viên giao hàng đang đến địa chỉ người gửi để nhận hàng.");
+                loadOrder();
+                closeModal('modal');
+            }
+        }).catch(function(e) {
+            checkErrorCode(e);
+            blockInput('addOrder','disable');
+        });
+    },1000)
+}
+//update status
+$(document).on('click','.update-status',function(){
+    updateType = $(this).attr('id');
+    orderID = $('.modal-body').attr('data-order');
+
+    formData = new FormData();
+    formData.append('updateType', updateType);
+    formData.append('orderID', orderID);
+
+    setTimeout(function(){
+        fetch("/php/data/updateType.php",{
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            if(res.ok) {
+                return res.json();
+            } else {
+                return Promise.reject(res.status);
+            }
+        })
+        .then(data => {
+            showNotiSuccess("Cập nhập thành công","Trạng thái đơn hàng đã được cập nhật");
+            closeModal('modal');
+            loadDeliveryOrder();
+        }).catch(function(e) {
+            checkErrorCode(e);
+            blockInput('loginForm','disable');
         });
     },1000)
 })
