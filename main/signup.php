@@ -1,3 +1,8 @@
+<?php 
+    if(isset($_COOKIE['cookieToken']) && isset($_SESSION['sessionToken'])) {
+        header("Location: http://placeholder.collabvn.ga/");
+    }
+?>
 <title>Đăng ký</title>
 <div class="d-login-bg"></div>
 <div class="d-login-container">
