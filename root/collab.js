@@ -393,3 +393,50 @@ $(document).on('submit','#loginForm',function(e){
         });
     },1000)
 })
+//Login delivery form
+$(document).on('submit','#loginDeliveryForm',function(e){
+    getFormType = $('.login-form').attr('id');
+    e.preventDefault();
+    userName = getInputVal('loginDeliveryForm','userName');
+    password = getInputVal('loginDeliveryForm','password');
+    if(getFormType == 'loginForm') {
+        remember = $('#loginDeliveryForm input[name="remember"]').is(':checked');
+    } else {
+        remember = true;
+    }
+
+    formData = new FormData();
+    formData.append('userName', userName);
+    formData.append('password', password);
+    formData.append('remember', remember);
+
+    blockInput('loginDeliveryForm','active');
+    removeInputError('loginDeliveryForm');
+
+    setTimeout(function(){
+        fetch("/php/data/accountDeliveryLogin.php",{
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            if(res.ok) {
+                return res.json();
+            } else {
+                return Promise.reject(res.status);
+            }
+        })
+        .then(data => {
+            if(!data.success) {
+                checkInputError('loginDeliveryForm',data);
+                blockInput('loginDeliveryForm','disable');
+            } else {
+                showNotiLoading("Đăng nhập thành công","Đang chuyển hướng đến trang bảng tin nhân viên");
+                setTimeout(function(){
+                    window.open("http://placeholder.collabvn.ga/delivery","_self")
+                },2000);
+            }
+        }).catch(function(e) {
+            checkErrorCode(e);
+            blockInput('loginDeliveryForm','disable');
+        });
+    },1000)
+})
