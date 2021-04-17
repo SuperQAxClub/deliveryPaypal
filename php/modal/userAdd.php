@@ -64,7 +64,7 @@
             <div class="paypal-cash">10 USD</div>
         </div>
         <div class="row-60">
-            paypal
+            <div class="btn-paypal" id="paypal-button"></div>
         </div>
     </div>
 </div>

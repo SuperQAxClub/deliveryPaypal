@@ -28,7 +28,7 @@
             } else {
                 $row = $getAvailableDeliveryID->fetch_assoc();
                 $deliveryID = $row['userID'];
-                $addDeliveryPerson = runDbReturn("INSERT INTO deliveryPerson(userID, orderID) VALUES(?,?)","ss",array($deliveryID,$orderID),'affected');
+                $addDeliveryPerson = runDbReturn("INSERT INTO deliveryPerson(userID, orderID) VALUES(?,?)","si",array($deliveryID,$orderID),'affected');
                 if($addDeliveryPerson == 0) {
                     $error['reason'] = 'dberror';
                 } else {
