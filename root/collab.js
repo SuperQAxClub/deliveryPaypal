@@ -379,8 +379,8 @@ $(document).on('submit','#loginForm',function(e){
         })
         .then(data => {
             if(!data.success) {
-                checkInputError('signupForm',data);
-                blockInput('signupForm','disable');
+                checkInputError('loginForm',data);
+                blockInput('loginForm','disable');
             } else {
                 showNotiLoading("Đăng nhập thành công","Đang chuyển hướng đến trang bảng tin");
                 setTimeout(function(){
@@ -389,7 +389,7 @@ $(document).on('submit','#loginForm',function(e){
             }
         }).catch(function(e) {
             checkErrorCode(e);
-            blockInput('signupForm','disable');
+            blockInput('loginForm','disable');
         });
     },1000)
 })
